@@ -18,3 +18,65 @@
 	width: 1em;
 	transform: translateY(0.65em);
 }
+
+.passage-edit-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.full-screen-button {
+	background-color: var(--color-blue);
+	color: white;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 0.9rem;
+}
+
+.full-screen-button:hover {
+	background-color: var(--color-blue-dark);
+}
+
+.full-screen-dialog {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+
+.full-screen-dialog-content {
+	background-color: white;
+	width: 90%;
+	height: 90%;
+	overflow: auto;
+	padding: 1rem;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+}
+
+.close-button {
+	margin-top: auto;
+	align-self: flex-end;
+	background-color: var(--color-red);
+	color: white;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 0.9rem;
+}
+
+.close-button:hover {
+	background-color: var(--color-red-dark);
+}
