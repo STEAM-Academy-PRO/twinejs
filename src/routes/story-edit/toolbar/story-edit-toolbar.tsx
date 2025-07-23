@@ -8,6 +8,10 @@ import {PassageActions} from './passage/passage-actions';
 import {StoryActions} from './story/story-actions';
 import {UndoRedoButtons} from './undo-redo-buttons';
 import {ZoomButtons} from './zoom-buttons';
+import { AssetManager } from '../../../components/asset-manager/asset-manager';
+import { IconButton } from '../../../components/control/icon-button';
+import { IconUpload } from '@tabler/icons';
+import { useDialogsContext } from '../../../dialogs';
 
 export interface StoryEditToolbarProps {
 	getCenter: () => Point;
@@ -18,6 +22,7 @@ export interface StoryEditToolbarProps {
 export const StoryEditToolbar: React.FC<StoryEditToolbarProps> = props => {
 	const {getCenter, onOpenFuzzyFinder, story} = props;
 	const {t} = useTranslation();
+	const {dispatch, dialogs} = useDialogsContext();
 
 	return (
 		<RouteToolbar
@@ -36,6 +41,13 @@ export const StoryEditToolbar: React.FC<StoryEditToolbarProps> = props => {
 					/>
 				),
 				[t('common.story')]: <StoryActions story={story} />,
+				[t('common.assets')]:
+				<IconButton
+								icon={<IconUpload />}
+								label={t('assetManager.title')}
+								onClick={() => dispatch({type: 'addDialog', component: AssetManager})}
+							/>
+							,
 				[t('common.build')]: <BuildActions story={story} />,
 				[t('common.appName')]: <AppActions />
 			}}

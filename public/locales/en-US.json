@@ -1,4 +1,10 @@
 {
+	"assetManager": {
+		"dragDrop": "Drag and drop files here or click to upload",
+		"searchPlaceholder": "Search assets...",
+		"title": "Asset Manager",
+		"upload": "Upload"
+	},
 	"colors": {
 		"none": "No Color",
 		"red": "Red",
@@ -10,6 +16,7 @@
 	},
 	"common": {
 		"add": "Add",
+		"assets": "Assets",
 		"appName": "Twine",
 		"back": "Back",
 		"build": "Build",
