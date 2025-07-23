@@ -9,10 +9,12 @@ import {StoryFormatsContextProvider} from './store/story-formats';
 import {StateLoader} from './store/state-loader';
 import {ThemeSetter} from './store/theme-setter';
 import './styles/typography.css';
+import { ToastProvider } from './components/toast';
 
 export const App: React.FC = () => (
 	<GlobalErrorBoundary>
 		<PrefsContextProvider>
+			<ToastProvider>
 			<LocaleSwitcher />
 			<ThemeSetter />
 			<StoryFormatsContextProvider>
@@ -24,6 +26,7 @@ export const App: React.FC = () => (
 					</StateLoader>
 				</StoriesContextProvider>
 			</StoryFormatsContextProvider>
+			</ToastProvider>
 		</PrefsContextProvider>
 	</GlobalErrorBoundary>
 );
