@@ -1,6 +1,6 @@
 {
 	"assetManager": {
-		"dragDrop": "Drag and drop files here or click to upload",
+		"dragDrop": "Drag and drop",
 		"searchPlaceholder": "Search assets...",
 		"title": "Asset Manager",
 		"upload": "Upload"

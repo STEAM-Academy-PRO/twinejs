@@ -67,7 +67,7 @@ export const AssetManager: React.FC<AssetManagerProps> = ({ onClose, onAssetSele
     if (onAssetSelect){
       onAssetSelect(asset.url)
     }
-    onClose();
+    // onClose();
   }, [onAssetSelect, onClose]);
 
   const filteredAssets = assets.filter(asset =>

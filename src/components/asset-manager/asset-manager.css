@@ -1,3 +1,13 @@
+.asset-manager-content{
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.asset-manager{
+  max-height: 400px;
+  
+}
+
 .error-message {
   background-color: #ffebee;
   color: #c62828;
@@ -30,8 +40,8 @@ padding: 5px}
 .asset-preview img,
 .asset-preview video,
 .asset-preview audio {
-  max-width: 200px;
-  height: 140px;
+  max-width: 120px;
+  max-height: 80px;
   object-fit: cover;
 }
 .asset-list {
@@ -40,7 +50,7 @@ padding: 5px}
 }
 
 .upload-area {
-  height: 200px;
+  height: 100px;
   width: 220px;
   flex-shrink: 0;
   margin-right: 1rem;
@@ -55,8 +65,8 @@ padding: 5px}
 }
 
 .asset-item {
-  height: 200px;
-  width: 220px;
+  height: 100px;
+  width: 120px;
   margin-right: 1rem;
   margin-bottom: 1rem;
   cursor: pointer;
