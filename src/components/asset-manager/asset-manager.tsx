@@ -62,7 +62,7 @@ export const AssetManager: React.FC<AssetManagerProps> = ({ onClose, onAssetSele
       console.error('Error copying text: ', err);
     });
 
-    toast.showInfo(`Copied to clipboard: ${asset.url}`, 1000000)
+    toast.showInfo(`Copied to clipboard: ${asset.url}`, 2000)
 
     if (onAssetSelect){
       onAssetSelect(asset.url)
