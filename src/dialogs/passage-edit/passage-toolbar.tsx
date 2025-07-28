@@ -1,4 +1,4 @@
-import {IconResize} from '@tabler/icons';
+import {IconResize, IconLayoutGrid, IconCode} from '@tabler/icons';
 import {Editor} from 'codemirror';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -25,10 +25,12 @@ export interface PassageToolbarProps {
 	passage: Passage;
 	story: Story;
 	useCodeMirror: boolean;
+	sceneMode: boolean;
+	onSceneModeChange: (enabled: boolean) => void;
 }
 
 export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
-	const {disabled, editor, passage, story, useCodeMirror} = props;
+	const {disabled, editor, passage, story, useCodeMirror, sceneMode, onSceneModeChange} = props;
 	const {dispatch} = useUndoableStoriesContext();
 	const {t} = useTranslation();
 
@@ -111,6 +113,16 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 				story={story}
 			/>
 			<TestPassageButton passage={passage} story={story} />
+			<button
+				aria-checked={sceneMode}
+				aria-label={t('dialogs.passageEdit.sceneMode')}
+				className="scene-mode-toggle"
+				disabled={disabled}
+				onClick={() => onSceneModeChange(!sceneMode)}
+				title={t('dialogs.passageEdit.sceneMode')}
+			>
+				{sceneMode ? <IconCode /> : <IconLayoutGrid />}
+			</button>
 		</ButtonBar>
 	);
 };

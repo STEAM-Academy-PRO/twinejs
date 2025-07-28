@@ -203,7 +203,8 @@
 			"sizeLarge": "Large",
 			"sizeSmall": "Small",
 			"sizeTall": "Tall",
-			"sizeWide": "Wide"
+			"sizeWide": "Wide",
+			"sceneMode": "Scene Mode"
 		},
 		"passageTags": {
 			"noTags": "No tags have been added to passages in this story.",

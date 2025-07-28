@@ -54,6 +54,14 @@ const InnerPassageEditStack: React.FC<PassageEditStackProps> = props => {
 		}
 	}
 
+	const [sceneMode, setSceneMode] = React.useState(false);
+
+	// React.useEffect(() => {
+	// 	if (sceneMode) {
+	// 		managementProps.onChangeMaximized(true);
+	// 	}
+	// }, [sceneMode]);
+
 	return (
 		<div
 			className={classNames('passage-edit-stack', {
@@ -81,6 +89,8 @@ const InnerPassageEditStack: React.FC<PassageEditStackProps> = props => {
 									disabled
 									passageId={passageId}
 									storyId={storyId}
+									sceneMode={sceneMode}
+									setSceneMode={setSceneMode}
 								/>
 							</BackgroundDialogCard>
 						);
@@ -97,7 +107,7 @@ const InnerPassageEditStack: React.FC<PassageEditStackProps> = props => {
 							maximizable
 							onClose={event => handleClose(passageId, event)}
 						>
-							<PassageEditContents passageId={passageId} storyId={storyId} />
+							<PassageEditContents passageId={passageId} storyId={storyId} sceneMode={sceneMode} setSceneMode={setSceneMode} />
 						</DialogCard>
 					);
 				})}

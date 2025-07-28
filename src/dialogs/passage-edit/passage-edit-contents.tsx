@@ -19,12 +19,14 @@ export interface PassageEditContentsProps {
 	disabled?: boolean;
 	passageId: string;
 	storyId: string;
+	sceneMode: boolean;
+	setSceneMode: (sceneMode: boolean) => void;
 }
 
 export const PassageEditContents: React.FC<
 	PassageEditContentsProps
 > = props => {
-	const {disabled, passageId, storyId} = props;
+	const {disabled, passageId, storyId, sceneMode, setSceneMode} = props;
 	const [storyFormatExtensionsEnabled, setStoryFormatExtensionsEnabled] =
 		React.useState(true);
 	const [editorCrashed, setEditorCrashed] = React.useState(false);
@@ -98,6 +100,8 @@ export const PassageEditContents: React.FC<
 				passage={passage}
 				story={story}
 				useCodeMirror={prefs.useCodeMirror}
+				sceneMode={sceneMode}
+				onSceneModeChange={setSceneMode}
 			/>
 			{prefs.useCodeMirror && storyFormatExtensionsEnabled && (
 				<StoryFormatToolbar
@@ -108,6 +112,7 @@ export const PassageEditContents: React.FC<
 				/>
 			)}
 			<ErrorBoundary>
+				{!sceneMode &&
 				<PassageText
 					disabled={disabled}
 					onChange={handlePassageTextChange}
@@ -116,7 +121,7 @@ export const PassageEditContents: React.FC<
 					story={story}
 					storyFormat={storyFormat}
 					storyFormatExtensionsDisabled={!storyFormatExtensionsEnabled}
-				/>
+				/>}
 			<PassageScenePreview script={passage.text} />
 			</ErrorBoundary>
 		</div>
