@@ -1,65 +1,3 @@
-// type ParsedBlock = {
-//     name: string;
-//     props: Record<string, any>;
-//     message?: string;
-//   };
-
-//   export function parseAtBlockMarkup(input: string): ParsedBlock[] {
-//     const result: ParsedBlock[] = [];
-
-//     // Match something like Frio({ ... }) optional text after
-//     const regex = /(\w+)\s*\(\s*\{([\s\S]*?)\}\s*\)([^\n]*)/g;
-//     let match: RegExpExecArray | null;
-
-//     while ((match = regex.exec(input)) !== null) {
-//       const name = match[1];
-//       const body = match[2];
-//       const trailingText = match[3]?.trim();
-
-//       const props: Record<string, any> = {};
-
-//       body.split('\n').forEach(line => {
-//         const clean = line.trim().replace(/,$/, ''); // remove trailing comma
-//         if (!clean) return;
-
-//         const kvMatch = clean.match(/^(\w+)\s*:\s*(.+)$/);
-//         if (kvMatch) {
-//           const key = kvMatch[1];
-//           let value: any = kvMatch[2].trim();
-
-//           // Handle arrays: [144, 444]
-//           if (value.startsWith('[') && value.endsWith(']')) {
-//             value = value
-//               .slice(1, -1)
-//               .split(',')
-//               .map((v: string) => v.trim())
-//               .map((v: string) => (isNaN(Number(v)) ? v : Number(v))); // convert numbers
-//           }
-//           // Handle strings: "happy"
-//           else if (value.startsWith('"') && value.endsWith('"')) {
-//             value = value.slice(1, -1);
-//           }
-//           // Handle raw numbers
-//           else if (!isNaN(Number(value))) {
-//             value = Number(value);
-//           }
-
-//           props[key] = value;
-//         }
-//       });
-
-//       const entry: ParsedBlock = { name, props };
-
-//       if (trailingText) {
-//         entry.message = trailingText;
-//       }
-
-//       result.push(entry);
-//     }
-
-//     return result;
-//   }
-
 
 export type ParsedBlock = {
     name: string;
@@ -154,8 +92,10 @@ export type ParsedBlock = {
         // Example usage:
         // const matches = [...'John("really feels like it")'.matchAll(stringCallRegex)];
         const matches = [...normalized.matchAll(stringCallRegex)];
-        if (matches[0].length > 3){
+        if (matches && matches[0] && matches[0].length > 3){
             return matches[0][3]
+        } else {
+            return ''
         }
     }
 
@@ -178,3 +118,30 @@ export type ParsedBlock = {
 //   `;
 
 //   console.log(parseAtBlockMarkup(text));
+
+
+export function stringifyToBlockMarkup(block: ParsedBlock): string {
+    let result = '';
+
+    if (block.name) {
+      result += block.name;
+    }
+
+    if (block.props && Object.keys(block.props).length > 0) {
+      result += '({';
+
+      Object.entries(block.props).forEach(([key, value], index) => {
+        if (index > 0) result += ', ';
+
+        result += `${key}: ${value}`;
+      });
+
+      result += '})';
+    }
+
+    if (block.message) {
+      result += `: ${block.message}`;
+    }
+
+    return result;
+  }
