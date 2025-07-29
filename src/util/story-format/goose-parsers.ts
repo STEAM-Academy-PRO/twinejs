@@ -1,4 +1,34 @@
 
+
+export type Character = {
+  name?: string;
+  posX?: number;
+  posY?: number;
+  sizeX?: number;
+  sizeY?: number;
+  mood?: string;
+  facing?: 'left' | 'right';
+  bubble?: string;
+  url?: string;
+};
+
+export type DialogLine = {
+  name: string;
+  mood?: string;
+  facing?: 'left' | 'right';
+  message?: string;
+};
+
+export type SceneData = {
+  width: number;
+  height: number;
+  scene?: string;
+  background?: string;
+  character?: Character[];
+  dialog?: DialogLine[];
+};
+
+
 export type ParsedBlock = {
     name: string;
     message?: string;
@@ -145,3 +175,73 @@ export function stringifyToBlockMarkup(block: ParsedBlock): string {
 
     return result;
   }
+
+
+
+
+/**
+  I have multiple sections that are limited with lines that start with
+  @someKeyWord.
+  Sometimes they're single line e.g.
+  @asdf('somevar') or
+  @another({url: 'asdf'}), some are multi line and follow the format of
+  Name({whatever JS}) - they can be multiline, like
+  Name({
+    var1: 'asdf',
+    bar: 'foo'
+  })
+
+  I want a function that returns an object map where all the section names are keys,
+  all the values are their respective values.
+  If they follow the `name({whatever JS})` format, they should be another
+  Object where the names are the keys, and their values are the one in the parsed parenthesis...`
+
+  The result should be
+  */
+  const parseSceneTextIntoBlocks = (text: string): Record<string, any> => {
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    const result: Record<string, any> = {};
+    let currentKey: string | null = null;
+    let currentValue: string = '';
+
+    for (const line of lines) {
+      if (line.startsWith('@')) {
+        if (currentKey) {
+          result[currentKey] = parseAtBlockMarkup(currentValue);
+        }
+        currentKey = line.slice(1);
+        currentValue = '';
+        // Check for single line keys:
+        const match = line.match(/^@(.*?)\s*\((.*?)\)$/);
+
+        if (match) {
+          try{
+            result[match[1]] = parseAtBlockMarkup(line.substring(1));
+          } catch (e:any){
+            console.warn('Error parsing config for', match[1], e.message)
+            result[match[1]] = { error: 'Invalid configuration' };
+          }
+          currentKey = null;
+          currentValue = '';
+        }
+      } else {
+        currentValue += line + '\n';
+      }
+    }
+    if (currentKey) {
+      result[currentKey] = parseAtBlockMarkup(currentValue);
+    }
+    return result || {};
+  }
+
+export const parseScene = (text: string): SceneData => {
+  // Parse the scene data from the text
+  const blocks = parseSceneTextIntoBlocks(text);
+
+  // Parse blocks
+  return {
+    ...blocks,
+    width: 1920,
+    height: 1080,
+  }
+}

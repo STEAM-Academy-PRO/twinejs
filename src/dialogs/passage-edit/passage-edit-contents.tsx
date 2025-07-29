@@ -13,7 +13,8 @@ import {PassageToolbar} from './passage-toolbar';
 import {StoryFormatToolbar} from './story-format-toolbar';
 import './passage-edit-contents.css';
 import {usePrefsContext} from '../../store/prefs';
-import PassageScenePreview from './passage-edit-scene';
+import PassageScenePreview from './passage-preview-scene';
+import PassageSceneEditor from './passage-edit-scene';
 
 export interface PassageEditContentsProps {
 	disabled?: boolean;
@@ -122,7 +123,10 @@ export const PassageEditContents: React.FC<
 					storyFormat={storyFormat}
 					storyFormatExtensionsDisabled={!storyFormatExtensionsEnabled}
 				/>}
-			<PassageScenePreview script={passage.text} />
+		
+			{!sceneMode && <PassageScenePreview script={passage.text} />}
+			{sceneMode && <PassageSceneEditor script={passage.text} setScript={handlePassageTextChange} />}
+
 			</ErrorBoundary>
 		</div>
 	);
