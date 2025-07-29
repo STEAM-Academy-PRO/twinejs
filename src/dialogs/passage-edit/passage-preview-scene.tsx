@@ -1,7 +1,6 @@
 import React from 'react';
-import { parseAtBlockMarkup, parseScene, SceneData } from '../../util/story-format/goose-parsers';
+import { parseScene, SceneData } from '../../util/story-format/goose-parsers';
 import SceneRenderer from '../../util/story-format/scene-renderer';
-import { SceneEditorToolbar } from '../../routes/story-edit/toolbar/passage/scene-editor-toolbar';
 
 
 
@@ -12,7 +11,7 @@ const PassageScenePreview: React.FC<{ script: string }> = ({ script }) => {
     sceneData: sceneConfig as SceneData
   })
 
-  console.log(sceneConfig)
+  // console.log(sceneConfig)
 
   return (<div style={{
     border: '2px solid #ccc',

@@ -113,16 +113,18 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 				story={story}
 			/>
 			<TestPassageButton passage={passage} story={story} />
-			<button
-				aria-checked={sceneMode}
-				aria-label={t('dialogs.passageEdit.sceneMode')}
-				className="scene-mode-toggle"
-				disabled={disabled}
+			{passage.text.indexOf('@scene') !== -1 && (
+				<button
+					aria-checked={sceneMode}
+					aria-label={t('dialogs.passageEdit.sceneMode')}
+					className="scene-mode-toggle"
+					disabled={disabled}
 				onClick={() => onSceneModeChange(!sceneMode)}
 				title={t('dialogs.passageEdit.sceneMode')}
 			>
 				{sceneMode ? <IconCode /> : <IconLayoutGrid />}
 			</button>
+			)}
 		</ButtonBar>
 	);
 };

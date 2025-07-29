@@ -123,9 +123,14 @@ export const PassageEditContents: React.FC<
 					storyFormat={storyFormat}
 					storyFormatExtensionsDisabled={!storyFormatExtensionsEnabled}
 				/>}
-		
-			{!sceneMode && <PassageScenePreview script={passage.text} />}
-			{sceneMode && <PassageSceneEditor script={passage.text} setScript={handlePassageTextChange} />}
+
+			{passage.text.indexOf('@scene') !== -1 && (
+				<div>
+					{!sceneMode && <PassageScenePreview script={passage.text} />}
+					{sceneMode && <PassageSceneEditor script={passage.text} setScript={handlePassageTextChange} />}
+				</div>
+			)}
+
 
 			</ErrorBoundary>
 		</div>
