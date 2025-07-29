@@ -1,16 +1,10 @@
 import React from 'react';
 import { parseScene, SceneData } from '../../util/story-format/goose-parsers';
-import SceneRenderer from '../../util/story-format/scene-renderer';
+import InteractiveScene from '../../util/story-format/interactive-scene';
 
 
 const PassageSceneEditor: React.FC<{ script: string, setScript: (script: string) => void }> = ({ script, setScript }) => {
   const sceneConfig = parseScene(script);
-
-  const scene = SceneRenderer({
-    sceneData: sceneConfig as SceneData
-  })
-
-
 
   return (<div style={{
     border: '2px solid #ccc',
@@ -22,7 +16,7 @@ const PassageSceneEditor: React.FC<{ script: string, setScript: (script: string)
     }}
     key={`scene-${sceneConfig.scene}`}
     >
-      {scene}
+      <InteractiveScene sceneData={sceneConfig as SceneData} />
     </div>)
 
 };
