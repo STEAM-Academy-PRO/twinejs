@@ -1,7 +1,8 @@
-import * as React from 'react';
-import {useElectronIpcPersistence} from './electron-ipc/use-electron-ipc-persistence';
-import {useLocalStoragePersistence} from './local-storage/use-local-storage-persistence';
-import {isElectronRenderer} from '../../util/is-electron';
+// import * as React from 'react';
+// import {useElectronIpcPersistence} from './electron-ipc/use-electron-ipc-persistence';
+// import {useLocalStoragePersistence} from './local-storage/use-local-storage-persistence';
+import {useBackendSyncPersistence} from './backend-sync/use-backend-sync-persistence';
+// import {isElectronRenderer} from '../../util/is-electron';
 import {StoriesAction, StoriesState} from '../stories';
 import {StoryFormatsAction, StoryFormatsState} from '../story-formats';
 import {PrefsAction, PrefsState} from '../prefs';
@@ -29,12 +30,12 @@ export interface PersistenceHooks {
 }
 
 export function usePersistence(): PersistenceHooks {
-	const electronIpcPersistence = useElectronIpcPersistence();
-	const localStoragePersistence = useLocalStoragePersistence();
+	// const electronIpcPersistence = useElectronIpcPersistence();
+	// const localStoragePersistence = useLocalStoragePersistence();
 
-	return React.useMemo(
-		() =>
-			isElectronRenderer() ? electronIpcPersistence : localStoragePersistence,
-		[electronIpcPersistence, localStoragePersistence]
-	);
+
+	// Wrap with backend sync functionality
+	const backendSyncPersistence = useBackendSyncPersistence();
+
+	return backendSyncPersistence;
 }
