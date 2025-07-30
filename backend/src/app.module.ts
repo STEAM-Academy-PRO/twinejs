@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AssetModule } from './asset/asset.module';
+import { StoryModule } from './story/story.module';
+import { PrefsModule } from './prefs/prefs.module';
+import { StoryFormatModule } from './story-format/story-format.module';
 
 @Module({
-  imports: [AssetModule],
+  imports: [AssetModule, StoryModule, PrefsModule, StoryFormatModule],
   controllers: [],
   providers: [],
 })
