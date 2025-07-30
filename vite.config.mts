@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react-swc';
 import browserslistToEsbuild from 'browserslist-to-esbuild';
 import {defineConfig} from 'vite';
-import checker from 'vite-plugin-checker';
+// import checker from 'vite-plugin-checker';
 import {nodePolyfills} from 'vite-plugin-node-polyfills';
 import {VitePWA} from 'vite-plugin-pwa';
 import packageJson from './package.json';
@@ -58,7 +58,7 @@ export default defineConfig({
       open: true,
       proxy: {
         '/api': {
-          target: 'http://localhost:3000',
+          target: 'http://localhost:3010',
           changeOrigin: true,
           secure: false,
         },
