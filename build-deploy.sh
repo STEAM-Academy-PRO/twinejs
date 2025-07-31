@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BUILD_DIR="$PROJECT_ROOT/deploy-build"
+BUILD_DIR="$PROJECT_ROOT/dist"
 BACKEND_DIR="$PROJECT_ROOT/backend"
 FRONTEND_DIST="$PROJECT_ROOT/dist/web"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
@@ -94,10 +94,6 @@ echo -e "${YELLOW}📝 Creating production package.json for backend...${NC}"
 cd "$BACKEND_DIR"
 pnpm install --production --prefix "$BUILD_DIR/backend"
 
-# Copy frontend files to static folder
-echo -e "${YELLOW}📁 Copying frontend files to static folder...${NC}"
-mkdir -p "$BUILD_DIR/static"
-cp -r "$FRONTEND_DIST"/* "$BUILD_DIR/static/"
 
 # Create deployment configuration
 echo -e "${YELLOW}📝 Creating deployment configuration...${NC}"
@@ -111,8 +107,8 @@ cat > "$BUILD_DIR/deploy-config.json" << EOF
     "env": "production"
   },
   "frontend": {
-    "staticFiles": "static/",
-    "indexFile": "static/index.html"
+    "staticFiles": "$FRONTEND_DIST/",
+    "indexFile": "$FRONTEND_DIST/index.html"
   }
 }
 EOF
@@ -142,7 +138,7 @@ echo "Backend started with PID: $BACKEND_PID"
 echo "Frontend static files available in: $DEPLOY_DIR/static"
 echo ""
 echo "Application is ready!"
-echo "Backend API: http://localhost:3001"
+echo "Backend API: http://localhost:3010"
 echo "Frontend files: Serve the static/ directory with your web server"
 echo ""
 echo "To stop the backend, run: kill $BACKEND_PID"

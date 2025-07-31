@@ -42,7 +42,7 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 fi
 
 # Use default package file
-DEPLOY_PACKAGE="deploy-build/twine.zip"
+DEPLOY_PACKAGE="dist/twine.zip"
 
 # Check if package file exists
 if [ ! -f "$DEPLOY_PACKAGE" ]; then
