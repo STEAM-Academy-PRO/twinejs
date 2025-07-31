@@ -8,6 +8,7 @@ import {
   Param,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { StoryService } from './story.service';
 import {
@@ -15,8 +16,11 @@ import {
   Story,
   UpsertStoryDto,
 } from './story.types';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('stories')
+@UseGuards(AuthGuard)
+
 export class StoryController {
   constructor(private readonly storyService: StoryService) {}
 

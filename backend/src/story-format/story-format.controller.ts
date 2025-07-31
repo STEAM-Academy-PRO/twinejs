@@ -5,10 +5,14 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { StoryFormatService } from './story-format.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('story-formats')
+@UseGuards(AuthGuard)
+
 export class StoryFormatController {
   constructor(private readonly storyFormatService: StoryFormatService) {}
 

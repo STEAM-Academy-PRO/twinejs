@@ -1,12 +1,14 @@
-import { Controller, Post, Get, UploadedFile, UseInterceptors, Res, Param, Logger, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Get, UploadedFile, UseInterceptors, Res, Param, Logger, BadRequestException, InternalServerErrorException, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { join } from 'path';
 import * as fs from 'fs';
+import { AuthGuard } from '../auth/auth.guard';
 
 const assetsDir = join(process.cwd(), 'public', 'assets');
 
+@UseGuards(AuthGuard)
 @Controller('assets')
 export class AssetController {
   private readonly logger = new Logger(AssetController.name);

@@ -5,10 +5,13 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
 import { PrefsService } from './prefs.service';
 
 @Controller('prefs')
+@UseGuards(AuthGuard)
 export class PrefsController {
   constructor(private readonly prefsService: PrefsService) {}
 
