@@ -8,7 +8,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 const assetsDir = join(process.cwd(), 'public', 'assets');
 
-@UseGuards(AuthGuard)
+
 @Controller('api/assets')
 export class AssetController {
   private readonly logger = new Logger(AssetController.name);
@@ -28,6 +28,7 @@ export class AssetController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -84,6 +85,7 @@ export class AssetController {
     res.sendFile(filePath);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   async listAssets(): Promise<any[]> {
     try {
