@@ -10,7 +10,7 @@ import {
 import { StoryFormatService } from './story-format.service';
 import { AuthGuard } from '../auth/auth.guard';
 
-@Controller('story-formats')
+@Controller('api/story-formats')
 @UseGuards(AuthGuard)
 
 export class StoryFormatController {

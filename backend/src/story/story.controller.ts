@@ -17,8 +17,9 @@ import {
   UpsertStoryDto,
 } from './story.types';
 import { AuthGuard } from '../auth/auth.guard';
+import { publishStoryToWeb } from './publish';
 
-@Controller('stories')
+@Controller('api/stories')
 @UseGuards(AuthGuard)
 
 export class StoryController {
@@ -61,6 +62,20 @@ export class StoryController {
     return this.toResponse(story);
   }
 
+  @Post('publish/:storyId')
+  async publish(@Param('storyId') storyId: string, @Body() body: { source: string }): Promise<{ success: boolean; url: string }> {
+    if (!body || !body.source) {
+      throw new Error('Request body must contain a "source" field with the story HTML content');
+    }
+
+    console.log('Publishing story:', storyId);
+    const url = await publishStoryToWeb(storyId, body.source);
+    return {
+      success: true,
+      url
+    };
+  }
+
   @Put(':key')
   async upsert(
     @Param('key') key: string,
@@ -74,6 +89,7 @@ export class StoryController {
   async delete(@Param('key') key: string): Promise<void> {
     await this.storyService.deleteByKey(key);
   }
+  
 
   private toResponse(story: any): Story {
     return {

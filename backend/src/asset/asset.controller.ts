@@ -9,7 +9,7 @@ import { AuthGuard } from '../auth/auth.guard';
 const assetsDir = join(process.cwd(), 'public', 'assets');
 
 @UseGuards(AuthGuard)
-@Controller('assets')
+@Controller('api/assets')
 export class AssetController {
   private readonly logger = new Logger(AssetController.name);
 

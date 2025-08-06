@@ -43,6 +43,7 @@
 		"play": "Play",
 		"preferences": "Preferences",
 		"publishToFile": "Publish To File",
+		"publishToWeb": "Publish To Web",
 		"redo": "Redo",
 		"redoChange": "Redo {{change}}",
 		"rename": "Rename",
@@ -413,6 +414,7 @@
 			"play": "Play",
 			"proof": "Proof",
 			"publishToFile": "Publish to File",
+			"publishToWeb": "Publish To Web",
 			"test": "Test"
 		}
 	},

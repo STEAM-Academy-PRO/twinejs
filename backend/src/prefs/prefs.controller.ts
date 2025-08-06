@@ -10,7 +10,7 @@ import {
 import { AuthGuard } from '../auth/auth.guard';
 import { PrefsService } from './prefs.service';
 
-@Controller('prefs')
+@Controller('api/prefs')
 @UseGuards(AuthGuard)
 export class PrefsController {
   constructor(private readonly prefsService: PrefsService) {}

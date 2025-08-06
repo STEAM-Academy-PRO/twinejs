@@ -18,6 +18,7 @@ import {usePublishing} from '../store/use-publishing';
 import {useStoryLaunch} from '../store/use-story-launch';
 import {saveHtml, saveTwee} from '../util/save-file';
 import {storyToTwee} from '../util/twee';
+import { saveWeb } from '../util/save-web';
 
 export interface BuildActionsProps {
 	story?: Story;
@@ -28,6 +29,7 @@ export const BuildActions: React.FC<BuildActionsProps> = ({story}) => {
 	const [playError, setPlayError] = React.useState<Error>();
 	const [proofError, setProofError] = React.useState<Error>();
 	const [publishError, setPublishError] = React.useState<Error>();
+	const [publishUrl, setPublishUrl] = React.useState<string>();
 	const [testError, setTestError] = React.useState<Error>();
 	const {playStory, proofStory, testStory} = useStoryLaunch();
 	const {t} = useTranslation();
@@ -76,6 +78,21 @@ export const BuildActions: React.FC<BuildActionsProps> = ({story}) => {
 
 		try {
 			saveHtml(await publishStory(story.id), storyFileName(story));
+		} catch (error) {
+			setPublishError(error as Error);
+		}
+	}
+
+	async function handlePublishWeb() {
+		if (!story) {
+			throw new Error('No story provided to publish');
+		}
+
+		resetErrors();
+
+		try {
+			const { url } = await saveWeb(story.id, await publishStory(story.id));
+			setPublishUrl(url);
 		} catch (error) {
 			setPublishError(error as Error);
 		}
@@ -158,6 +175,26 @@ export const BuildActions: React.FC<BuildActionsProps> = ({story}) => {
 						icon={<IconX />}
 						label={t('common.close')}
 						onClick={() => setProofError(undefined)}
+						variant="primary"
+					/>
+				</CardContent>
+			</CardButton>
+			<CardButton
+				ariaLabel={publishError?.message ?? ''}
+				disabled={!story}
+				icon={<IconFileText />}
+				label={t('routeActions.build.publishToWeb')}
+				onChangeOpen={() => setPublishError(undefined)}
+				onClick={handlePublishWeb}
+				open={!!publishError || !!publishUrl}
+			>
+				<CardContent>
+					<p>{publishError?.message}</p>
+					<a href={publishUrl} target="_blank" rel="noopener noreferrer">{publishUrl}</a>
+					<IconButton
+						icon={<IconX />}
+						label={t('common.close')}
+						onClick={() => { setPublishError(undefined); setPublishUrl(undefined); }}
 						variant="primary"
 					/>
 				</CardContent>
