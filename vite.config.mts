@@ -50,7 +50,34 @@ export default defineConfig({
         registerType: 'autoUpdate',
         includeAssets: ['locales/**', 'pwa/**', 'story-formats/**'],
         workbox: {
-          globPatterns: ['**/*.{js,css,html,svg,woff,woff2}']
+          globPatterns: ['**/*.{js,css,html,svg,woff,woff2}'],
+
+          // Exclude API routes from service worker caching
+          navigateFallbackDenylist: [/^\/stories\/.+/, /^\/api\/.+/],
+          runtimeCaching: [
+            {
+              // Cache static assets
+              urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // 365 days
+                }
+              }
+            },
+            {
+              // Don't cache API routes - let them go to network
+              urlPattern: /^\/stories\/.*/,
+              handler: 'NetworkOnly'
+            },
+            {
+              // Don't cache API routes - let them go to network
+              urlPattern: /^\/api\/.*/,
+              handler: 'NetworkOnly'
+            }
+          ]
         }
       })
     ],
@@ -62,7 +89,7 @@ export default defineConfig({
           changeOrigin: true,
           secure: false,
         },
-        '/public': {
+        '/stories': {
           target: 'http://localhost:3010',
           changeOrigin: true,
           secure: false,

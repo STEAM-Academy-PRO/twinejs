@@ -3,6 +3,9 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as bodyParser from 'body-parser';
+import { existsSync } from 'fs';
+
+const PORT = process.env.PORT || 3010;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -11,18 +14,24 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+  // Dirname here is /home/symunona/dev/robot/twinejs/backend/dist !
+  // In DEV and PROD (package), paths are slightly different:
+  // DEV: uses the '../../dist/web' directory (where the frontend build puts files)
+  // PROD: uses the '../../web' directory (where the deploy script puts the files)
+  const distWebPath = join(__dirname, '..', '..', 'dist', 'web');
+  const webPath = existsSync(distWebPath) ? distWebPath : join(__dirname, '..', '..', 'web');
+
   // Set API prefix for all routes
   // app.setGlobalPrefix('api');
 
-  // Serve static files from the 'static' directory
-  // In production, this will be the built frontend
-  const staticPath = join(__dirname, '..', '..', 'static');
-  app.useStaticAssets(staticPath);
+  // Serve static files from the '../web/' directory
+  // This serves the TwineJS web application
+  app.useStaticAssets(webPath);
 
   // Serve index.html for all non-API routes (SPA routing)
-  app.setBaseViewsDir(staticPath);
-  app.setViewEngine('html');
+  console.log('Serving Static dir as root: ' + webPath)
+  console.log('Server Staring on port ' + PORT);
 
-  await app.listen(process.env.PORT || 3010);
+  await app.listen(PORT);
 }
 bootstrap();

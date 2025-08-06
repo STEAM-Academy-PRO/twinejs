@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
-@Controller('public')
+@Controller('stories')
 export class StaticController {
 
   @Get(':id')
@@ -14,6 +14,7 @@ export class StaticController {
     const publicDir = join(__dirname, '..', '..', 'public');
     const storyDir = join(publicDir, 'stories', storyId);
     const indexFile = join(storyDir, 'index.html');
+    console.log('serving story: ' + storyId + ' from ' + indexFile)
 
     if (existsSync(indexFile)) {
       return res.sendFile(indexFile);
