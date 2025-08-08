@@ -50,6 +50,11 @@ export interface Passage {
 	 * Width of the passage in pixels.
 	 */
 	width: number;
+
+	/**
+	 * SVG visual of the passage.
+	 */
+	svg: string;
 }
 
 export interface Story {

@@ -15,6 +15,7 @@ import './passage-edit-contents.css';
 import {usePrefsContext} from '../../store/prefs';
 import PassageScenePreview from './passage-preview-scene';
 import PassageSceneEditor from './passage-edit-scene';
+import PassageSvgEditor from './passage-edit-svg';
 
 export interface PassageEditContentsProps {
 	disabled?: boolean;
@@ -131,6 +132,18 @@ export const PassageEditContents: React.FC<
 				</div>
 			)}
 
+			{passage.svg && (
+				<PassageSvgEditor
+					disabled={disabled}
+					onChange={handlePassageTextChange}
+					passage={passage}
+					story={story}
+				/>
+				// <div
+				// 	className="passage-edit-svg"
+				// 	dangerouslySetInnerHTML={{__html: passage.svg}}
+				// />
+			)}
 
 			</ErrorBoundary>
 		</div>
