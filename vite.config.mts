@@ -50,6 +50,9 @@ export default defineConfig({
         registerType: 'autoUpdate',
         includeAssets: ['locales/**', 'pwa/**', 'story-formats/**'],
         workbox: {
+          // Allow larger assets (e.g., svgedit bundles ~2.3MB) to be precached.
+          // Default is 2 MiB which causes build to fail with missing assets.
+          maximumFileSizeToCacheInBytes: 6 * 1024 * 1024, // 6 MiB
           globPatterns: ['**/*.{js,css,html,svg,woff,woff2}'],
 
           // Exclude API routes from service worker caching
