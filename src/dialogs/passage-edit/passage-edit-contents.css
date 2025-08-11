@@ -43,7 +43,7 @@
 	background: black;
 }
 
-.passage-edit-svg svg{ padding: 1rem; }
+.passage-edit-svg svg{ padding: 1rem; max-width: 40% }
 
 .preview-container{ text-align: center;}
 

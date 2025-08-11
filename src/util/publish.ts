@@ -57,7 +57,8 @@ export function publishPassage(passage: Passage, localId: number) {
 		`tags="${escape(passage.tags.join(' '))}" ` +
 		`position="${passage.left},${passage.top}" ` +
 		`size="${passage.width},${passage.height}">` +
-		`${escape(passage.text)}</tw-passagedata>`
+		escape(passage.svg || '') +
+		`<passage-text>${escape(passage.text)}</passage-text></tw-passagedata>`
 	);
 }
 

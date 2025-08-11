@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Passage, Story } from '../../store/stories';
+import { useToast } from '../../components/toast';
 
 
 const PassageSvgEditor: React.FC<{
@@ -17,7 +18,9 @@ const PassageSvgEditor: React.FC<{
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(false);
+  const readyRef = useRef(false);
   const pending = useRef(new Map<string, (r:SvgeResponse)=>void>());
+  const toast = useToast();
 
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
@@ -26,6 +29,7 @@ const PassageSvgEditor: React.FC<{
 
       if (e.data.type === "SVG_UPDATED"){
         onChange?.(exportSvg(e.data.result));
+        toast.showInfo('SVG Updated')
         return;
       }
 
@@ -66,6 +70,7 @@ const PassageSvgEditor: React.FC<{
   };
   const getSvg  = async () => {
     const svg = await call("getSvgString");
+    toast.showInfo('SVG Updated')
     onChange?.(exportSvg(svg));
   };
 
@@ -133,8 +138,8 @@ const PassageSvgEditor: React.FC<{
               <button disabled={!ready} onClick={exportPng}>Export PNG</button>
               <button disabled={!ready} onClick={setZoom}>zoom</button>
               <button disabled={!ready} onClick={setZoom2}>zoom2</button> */}
-              <button onClick={() => {
-                getSvg()
+              <button onClick={async () => {
+                await getSvg()
                 setIsFullscreen(false)
               }
               }>Save and Close X</button>

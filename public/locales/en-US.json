@@ -338,7 +338,8 @@
 				"snapToGrid": "Snap to Grid",
 				"startStoryHere": "Start Story Here",
 				"stylesheet": "Stylesheet",
-				"testFromHere": "Test From Here"
+				"testFromHere": "Test From Here",
+				"addSvg": "Add SVG"
 			},
 			"topBar": {
 				"editJavaScript": "Edit Story JavaScript",
