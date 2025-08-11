@@ -2,6 +2,8 @@
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	/* Allow children to manage their own heights in flex layouts */
+	min-height: 0;
 }
 
 /* Needed when CodeMirror is disabled. */
@@ -15,11 +17,35 @@
 	outline: none;
 }
 
-.passage-edit-svg {
-	flex-grow: 1;
-	max-height: 40%;
+/* Make the main text editor area flexible so it doesn't get squashed */
+.passage-edit-contents .dialog-editor {
+	flex: 1 1 auto;
+	min-height: 0; /* critical for flex children with overflow */
+	overflow: auto;
 }
 
-.passage-edit-svg svg{
-	padding: 1rem;
+.passage-edit-svg {
+	/* Cap the bottom editor to at most 40% of the viewport height */
+	flex: 0 1 40vh;
+	max-height: 40vh;
+	height: auto;
+	padding: 0.5rem;
+	box-sizing: border-box;
+	background: black;
+	overflow: hidden;
 }
+
+.passage-edit-svg .svgedit-iframe {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	background: black;
+}
+
+.passage-edit-svg svg{ padding: 1rem; }
+
+.preview-container{ text-align: center;}
+
+.svg-menu{ text-align: right;}
+.svg-menu button{background-color: var(--blue); border: 0; border-radius: 4px; padding: 4px 8px;}

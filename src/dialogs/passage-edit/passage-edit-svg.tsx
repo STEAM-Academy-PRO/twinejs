@@ -25,15 +25,13 @@ const PassageSvgEditor: React.FC<{
       if (!e.data || (e.data.type !== "SVGE_RESPONSE" && e.data.type !== "SVGE_READY" && e.data.type !== "SVG_UPDATED")) return;
 
       if (e.data.type === "SVG_UPDATED"){
-        console.warn(e.data.result)
+        onChange?.(exportSvg(e.data.result));
         return;
       }
 
       if (e.data.type === "SVGE_READY") {
         setReady(true);
         loadSvg();
-        window.x = frameRef.current?.contentWindow;
-        console.log('window.x', window.x)
         return;
       }
 
@@ -63,27 +61,34 @@ const PassageSvgEditor: React.FC<{
 
   // EXAMPLES
   const loadSvg = () => {
-    console.log(passage.svg)
     call("setSvgString", { svg: passage.svg });
 
   };
   const getSvg  = async () => {
     const svg = await call("getSvgString");
-    console.log("SVG:", svg);
+    onChange?.(exportSvg(svg));
   };
 
-  const setZoom = async () => {
-    await call("setZoom", { zoom: 0.25 });
-  };
+  const exportSvg = (svg:string)=>{
+    const svgDoc = new DOMParser().parseFromString(svg, "text/xml");
+    const svgEle = svgDoc.querySelector("svg");
+    if (!svgEle) return svg;
+    svgEle.setAttribute("width", "1920");
+    svgEle.setAttribute("height", "1080");
+    svgEle.setAttribute("viewBox", "0 0 1920 1080");
+    return new XMLSerializer().serializeToString(svgDoc);
+  }
 
-  const setZoom2 = async () => {
-    await call("setZoom", { zoom: 4 });
-  };
-  const exportPng = async () => {
-    const pngDataUrl = await call("exportPng", { scale: 2 }); // returns data URL
-    // do something with it (download, preview, upload)
-    console.log("PNG:", pngDataUrl.slice(0, 64) + "...");
-  };
+  const autoscaleSvg = (svg: string)=>{
+    const svgDoc = new DOMParser().parseFromString(svg, "text/xml");
+    const svgEle = svgDoc.querySelector("svg");
+    if (!svgEle) return svg;
+    svgEle.removeAttribute("width")
+    svgEle.removeAttribute("height");
+    svgEle.setAttribute("viewBox", "0 0 1920 1080");
+    return new XMLSerializer().serializeToString(svgDoc);
+  }
+
 
   return (
     <div
@@ -104,7 +109,7 @@ const PassageSvgEditor: React.FC<{
               <button onClick={() => setIsFullscreen(!isFullscreen)}>
                 {isFullscreen ? 'Exit edit' : 'Edit'}
               </button>
-              <div dangerouslySetInnerHTML={{__html: passage.svg}} />
+              <div className="preview-container" dangerouslySetInnerHTML={{__html: autoscaleSvg(passage.svg)}} />
           </div>
       )}
     {isFullscreen && (
@@ -122,19 +127,23 @@ const PassageSvgEditor: React.FC<{
           }}
         >
           <div className="w-full h-full flex flex-col gap-2">
-            <div className="flex gap-2">
-              <button disabled={!ready} onClick={loadSvg}>Load SVG</button>
+            <div className="svg-menu">
+              {/* <button disabled={!ready} onClick={loadSvg}>Load SVG</button>
               <button disabled={!ready} onClick={getSvg}>Get SVG</button>
               <button disabled={!ready} onClick={exportPng}>Export PNG</button>
               <button disabled={!ready} onClick={setZoom}>zoom</button>
-              <button disabled={!ready} onClick={setZoom2}>zoom2</button>
-              <button onClick={() => setIsFullscreen(false)}>Close</button>
+              <button disabled={!ready} onClick={setZoom2}>zoom2</button> */}
+              <button onClick={() => {
+                getSvg()
+                setIsFullscreen(false)
+              }
+              }>Save and Close X</button>
             </div>
 
             <iframe
               ref={frameRef}
               title="SVG-Edit"
-              src={`/svgedit/editor/index_twine.html`} // see bridge below
+              src={`/svgedit/index_twine.html`} // see bridge below
               style={{ width: "100%", height: "85vh", border: "1px solid #333", background: "#222" }}
               sandbox="allow-scripts allow-same-origin allow-downloads allow-forms allow-popups allow-modals"
             />

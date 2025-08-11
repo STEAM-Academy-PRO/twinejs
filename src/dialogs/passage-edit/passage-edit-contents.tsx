@@ -69,6 +69,13 @@ export const PassageEditContents: React.FC<
 		[dispatch, passage, story]
 	);
 
+	const handlePassageSvgChange = React.useCallback(
+		(svg: string) => {
+			dispatch(updatePassage(story, passage, {svg}));
+		},
+		[dispatch, passage, story]
+	);
+
 	function handleExecCommand(name: string) {
 		// A format toolbar command probably will affect the editor content. It
 		// appears that react-codemirror2 can't maintain the selection properly in
@@ -125,25 +132,14 @@ export const PassageEditContents: React.FC<
 					storyFormatExtensionsDisabled={!storyFormatExtensionsEnabled}
 				/>}
 
-			{passage.text.indexOf('@scene') !== -1 && (
-				<div>
-					{!sceneMode && <PassageScenePreview script={passage.text} />}
-					{sceneMode && <PassageSceneEditor script={passage.text} setScript={handlePassageTextChange} />}
-				</div>
-			)}
-
-			{passage.svg && (
-				<PassageSvgEditor
-					disabled={disabled}
-					onChange={handlePassageTextChange}
-					passage={passage}
-					story={story}
-				/>
-				// <div
-				// 	className="passage-edit-svg"
-				// 	dangerouslySetInnerHTML={{__html: passage.svg}}
-				// />
-			)}
+				{passage.svg && (
+					<PassageSvgEditor
+						disabled={disabled}
+						onChange={handlePassageSvgChange}
+						passage={passage}
+						story={story}
+					/>
+				)}
 
 			</ErrorBoundary>
 		</div>
