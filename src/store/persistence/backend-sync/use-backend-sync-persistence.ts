@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as prefs from './prefs';
 import * as stories from './stories';
 import * as storyFormats from './story-formats';
+import * as scenes from './scenes';
 
 export function useBackendSyncPersistence() {
 	return React.useMemo(
@@ -17,6 +18,12 @@ export function useBackendSyncPersistence() {
 			storyFormats: {
 				load: storyFormats.load,
 				saveMiddleware: storyFormats.saveMiddleware
+			},
+			scenes: {
+				list: scenes.list,
+				upsertFromFile: scenes.upsertFromFile,
+				get: scenes.get,
+				remove: scenes.remove,
 			}
 		}),
 		[]

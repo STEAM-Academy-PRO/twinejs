@@ -13,9 +13,7 @@ import {PassageToolbar} from './passage-toolbar';
 import {StoryFormatToolbar} from './story-format-toolbar';
 import './passage-edit-contents.css';
 import {usePrefsContext} from '../../store/prefs';
-import PassageScenePreview from './passage-preview-scene';
 import PassageSceneEditor from './passage-edit-scene';
-import PassageSvgEditor from './passage-edit-svg';
 
 export interface PassageEditContentsProps {
 	disabled?: boolean;
@@ -133,7 +131,7 @@ export const PassageEditContents: React.FC<
 				/>}
 
 				{passage.svg && (
-					<PassageSvgEditor
+					<PassageSceneEditor
 						disabled={disabled}
 						onChange={handlePassageSvgChange}
 						passage={passage}

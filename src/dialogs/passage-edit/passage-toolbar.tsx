@@ -20,6 +20,7 @@ import {Color} from '../../util/color';
 import {TagCardButton} from '../../components/tag/tag-card-button';
 import { AddSvgButton } from '../../routes/story-edit/toolbar/passage/passage-add-svg';
 import svgTemplate from '../../util/svg-template.svg?raw';
+import { SceneControls } from '../../routes/story-edit/toolbar/passage/passage-scene-control';
 
 export interface PassageToolbarProps {
 	disabled?: boolean;
@@ -57,8 +58,7 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 		dispatch(updatePassage(story, passage, {name}, {dontUpdateOthers: true}));
 	}
 
-	function handleAddSvg() {
-		console.log('adding', svgTemplate)
+	async function handleAddSvg() {
 		dispatch(updatePassage(story, passage, {svg: svgTemplate}));
 	}
 
@@ -132,11 +132,16 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 				{sceneMode ? <IconCode /> : <IconLayoutGrid />}
 			</button>
 			)}
-			{!passage.svg &&
+			{/* {!passage.svg &&
 				<AddSvgButton
 					onClick={handleAddSvg}
 				/>
-			}
+			} */}
+			asdf
+			<SceneControls
+				story={story}
+				passage={passage}
+			/>
 		</ButtonBar>
 	);
 };

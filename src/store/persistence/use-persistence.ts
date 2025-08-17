@@ -27,6 +27,12 @@ export interface PersistenceHooks {
 			action: StoryFormatsAction
 		) => void;
 	};
+	scenes?: {
+		list: (ids?: string[]) => Promise<Array<{ id: string; url: string }>>;
+		upsertFromFile: (file: string, id?: string) => Promise<{ id: string; url: string; size?: number }>;
+		get: (id: string) => Promise<{ id: string; svg: string }>;
+		remove: (id: string) => Promise<void>;
+	};
 }
 
 export function usePersistence(): PersistenceHooks {

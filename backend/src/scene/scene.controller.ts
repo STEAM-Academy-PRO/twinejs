@@ -44,7 +44,7 @@ export class SceneController {
       }),
       limits: { fileSize: 5 * 1024 * 1024 }, // 5MB should be plenty for SVG
       fileFilter: (req, file, cb) => {
-        // accept common SVG mimetypes
+        // accept common SVG mimeapropó: types
         const ok = file.mimetype === 'image/svg+xml' || /svg/.test(file.mimetype) || file.originalname.endsWith('.svg');
         if (ok) cb(null, true);
         else cb(new Error('Invalid file type, expected SVG'), false);
@@ -59,8 +59,7 @@ export class SceneController {
     if (!file) throw new BadRequestException('No file uploaded');
 
     // read optional id from either query or body field (multer parses text fields)
-    const requestedId = bodyId ?? queryId;
-    const id = requestedId && uuidValidate(requestedId) ? requestedId : uuidv4();
+    const id = bodyId ?? queryId;
     const finalPath = join(scenesDir, `${id}.svg`);
 
     try {
