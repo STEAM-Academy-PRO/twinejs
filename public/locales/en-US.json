@@ -344,7 +344,8 @@
 				"linkSceneAlt": "Re-use a scene here: link the same scene to multiple passages. They will remain linked: if you edit it one place the other will be changed too.",
 				"copyScene": "Copy Scene",
 				"copySceneAlt": "Make a copy of an existing scene",
-				"unlinkScene": "Unlink scene from here"
+				"unlinkScene": "Unlink scene from here",
+				"deleteScene": "Delete scene"
 			},
 			"topBar": {
 				"editJavaScript": "Edit Story JavaScript",

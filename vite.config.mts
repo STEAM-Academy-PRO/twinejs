@@ -79,6 +79,16 @@ export default defineConfig({
               // Don't cache API routes - let them go to network
               urlPattern: /^\/api\/.*/,
               handler: 'NetworkOnly'
+            },
+            {
+              // Don't cache API routes - let them go to network
+              urlPattern: /^\/scenes\/.*/,
+              handler: 'NetworkOnly'
+            },
+            {
+              // Don't cache API routes - let them go to network
+              urlPattern: /^\/static\/.*/,
+              handler: 'NetworkOnly'
             }
           ]
         }
@@ -93,6 +103,16 @@ export default defineConfig({
           secure: false,
         },
         '/stories': {
+          target: 'http://localhost:3010',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/static': {
+          target: 'http://localhost:3010',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/scenes': {
           target: 'http://localhost:3010',
           changeOrigin: true,
           secure: false,

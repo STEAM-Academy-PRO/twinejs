@@ -33,6 +33,7 @@ export const SceneControls: React.FC<AddSceneButtonProps> = props => {
 	const scenes = Object.entries(scenesMapOfPassages).map(([svgUrl, passages]) =>
 		({svgUrl, name: passages.map(passage => passage.name).join(', ')}));
 
+	const isSceneLinkedOnlyToThisPassage = scenesMapOfPassages[passage.svg]?.length === 1;
 
 	const handleNewScene = () => {
 		const id = uuid()
@@ -55,6 +56,12 @@ export const SceneControls: React.FC<AddSceneButtonProps> = props => {
 	const handleLinkSceneChange = (id: string) => {
 		dispatch(updatePassage(props.story, props.passage, {svg: id}));
 	};
+
+	const deleteScene = async (id: string) => {
+		await scenesPersistence?.remove(id)
+		dispatch(updatePassage(props.story, props.passage, {svg: ''}));
+	};
+
 
 	const scenesOptions = scenes.map(scene => (
 		<option key={scene.svgUrl} value={scene.svgUrl}>
@@ -93,11 +100,18 @@ export const SceneControls: React.FC<AddSceneButtonProps> = props => {
 			onClick={handleNewScene}
 		/>
 		)}
-		{passage.svg && (
+		{passage.svg && !isSceneLinkedOnlyToThisPassage && (
 			<IconButton
 				icon={<IconLinkOff />}
 				label={t('routes.storyEdit.toolbar.unlinkScene')}
 				onClick={() => handleLinkSceneChange('')}
+			/>
+			)}
+		{passage.svg && isSceneLinkedOnlyToThisPassage && (
+			<IconButton
+				icon={<IconLinkOff />}
+				label={t('routes.storyEdit.toolbar.deleteScene')}
+				onClick={() => deleteScene(passage.svg)}
 			/>
 			)}
 		</>
