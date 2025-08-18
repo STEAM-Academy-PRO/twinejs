@@ -29,8 +29,8 @@ export interface PersistenceHooks {
 	};
 	scenes?: {
 		list: (ids?: string[]) => Promise<Array<{ id: string; url: string }>>;
-		upsertFromFile: (file: string, id?: string) => Promise<{ id: string; url: string; size?: number }>;
-		get: (id: string) => Promise<{ id: string; svg: string }>;
+		save: (file: string, id?: string) => Promise<{ id: string; url: string; size?: number }>;
+		get: (id: string) => Promise<string>;
 		remove: (id: string) => Promise<void>;
 	};
 }

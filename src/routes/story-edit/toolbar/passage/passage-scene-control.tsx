@@ -36,7 +36,7 @@ export const SceneControls: React.FC<AddSceneButtonProps> = props => {
 
 	const handleNewScene = () => {
 		const id = uuid()
-		scenesPersistence?.upsertFromFile(svgTemplate, id)
+		scenesPersistence?.save(svgTemplate, id)
 		dispatch(updatePassage(props.story, props.passage, {svg: id}));
 	};
 
@@ -47,7 +47,7 @@ export const SceneControls: React.FC<AddSceneButtonProps> = props => {
 			return;
 		}
 		const id = uuid()
-		await scenesPersistence?.upsertFromFile(svg.svg, id)
+		await scenesPersistence?.save(id, svg)
 
 		dispatch(updatePassage(props.story, props.passage, {svg: id}));
 	};

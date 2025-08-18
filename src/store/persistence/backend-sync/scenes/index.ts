@@ -1,4 +1,4 @@
 export * from './list';
-export * from './upsert';
+export * from './save';
 export * from './remove';
 export * from './get';

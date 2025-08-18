@@ -1,61 +1,76 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Passage, Story } from '../../store/stories';
 import { useToast } from '../../components/toast';
 import { usePersistence } from '../../store/persistence/use-persistence';
 
+// Module-scoped cache for downloaded/scaled SVGs by ID
+const svgCache: Record<string, string> = {};
+
+interface SvgeRequest {
+  type: 'SVGE_REQUEST';
+  id: string;
+  method: string;
+  params?: any;
+}
+
+interface SvgeResponse {
+  type: 'SVGE_RESPONSE';
+  id: string;
+  ok: boolean;
+  result?: any;
+  error?: string;
+}
 
 const PassageSceneEditor: React.FC<{
   disabled?: boolean;
-  onChange?: (svg: string) => void;
   passage: Passage;
   story: Story;
 }> = ({
-  disabled: _disabled,
-  onChange,
   passage,
-  story: _story,
 }) => {
 
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(false);
-  const readyRef = useRef(false);
   const pending = useRef(new Map<string, (r:SvgeResponse)=>void>());
   const toast = useToast();
-  const {scenes: {get: getScene}} = usePersistence()
-
-  const svg = useMemo(async ()=>{
-    console.log('getting svg:', passage.svg)
-    const svg = await getScene(passage.svg)
-    console.log(svg)
-    return autoscaleSvg(svg)
-  },[passage.svg])
+  const {scenes: scenesPersistence} = usePersistence();
+  const [svg, setSvg] = useState<string>('');
+  // Track the initially loaded SVG to avoid saving it back immediately
+  const initialSvgRef = useRef<string | null>(null);
+  if (!scenesPersistence){
+    return <div>Failed to load scenes persistence</div>
+  }
 
   useEffect(() => {
-    const onMessage = (e: MessageEvent) => {
-      // TODO: tighten origin check to your editor’s origin
-      if (!e.data || (e.data.type !== "SVGE_RESPONSE" && e.data.type !== "SVGE_READY" && e.data.type !== "SVG_UPDATED")) return;
-
-      if (e.data.type === "SVG_UPDATED"){
-        onChange?.(exportSvg(e.data.result));
-        toast.showInfo('SVG Updated')
-        return;
+    let cancelled = false;
+    const id = passage.svg;
+    (async () => {
+      try {
+        if (id && svgCache[id]) {
+          if (!cancelled) {
+            setSvg(svgCache[id]);
+            if (initialSvgRef.current === null) initialSvgRef.current = svgCache[id];
+          }
+          return;
+        }
+        // console.log('getting svg:', id);
+        const raw = await scenesPersistence.get(id);
+        const scaled = autoscaleSvg(raw);
+        svgCache[id] = scaled;
+        if (!cancelled) {
+          setSvg(scaled);
+          if (initialSvgRef.current === null) initialSvgRef.current = scaled;
+        }
+      } catch (err) {
+        console.error('Failed to load scene SVG', err);
+        if (!cancelled) setSvg('');
       }
+    })();
+    return () => { cancelled = true; };
+  }, [passage.svg]);
 
-      if (e.data.type === "SVGE_READY") {
-        setReady(true);
-        loadSvg();
-        return;
-      }
 
-      const resp = e.data as SvgeResponse;
-      const resolve = pending.current.get(resp.id);
-      if (resolve) { pending.current.delete(resp.id); resolve(resp); }
-    };
-    window.addEventListener("message", onMessage);
-
-    return () => window.removeEventListener("message", onMessage);
-  }, []);
 
   const call = useCallback(async (method: string, params?: any) => {
     const id = Math.random().toString(36).slice(2);
@@ -70,17 +85,53 @@ const PassageSceneEditor: React.FC<{
     // set targetOrigin to your editor’s exact origin in production
     win.postMessage(req, "*");
     return p;
-  }, []);
+  }, [svg]);
 
-  // EXAMPLES
-  const loadSvg = () => {
-    call("setSvgString", { svg: passage.svg });
 
-  };
+  const loadSvg = useCallback(() => {
+    if (svg) call("setSvgString", { svg });
+  }, [svg, call]);
+
+
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      // TODO: tighten origin check to your editor’s origin
+      if (!e.data || (e.data.type !== "SVGE_RESPONSE" && e.data.type !== "SVGE_READY" && e.data.type !== "SVG_UPDATED")) return;
+
+      if (e.data.type === "SVG_UPDATED"){
+        setSvg(e.data.result);
+        saveSvg(e.data.result);
+        toast.showInfo('SVG Updated', 500)
+        return;
+      }
+
+      if (e.data.type === "SVGE_READY") {
+        setReady(true);
+        loadSvg()
+        return;
+      }
+
+      const resp = e.data as SvgeResponse;
+      const resolve = pending.current.get(resp.id);
+      if (resolve) { pending.current.delete(resp.id); resolve(resp); }
+    };
+    window.addEventListener("message", onMessage);
+
+    return () => window.removeEventListener("message", onMessage);
+  }, [loadSvg]);
+
+
   const getSvgFromEditor  = async () => {
-    const svg = await call("getSvgString");
-    toast.showInfo('SVG Updated')
-    onChange?.(exportSvg(svg));
+    const rawSvg = await call("getSvgString");
+    const exported = exportSvg(rawSvg);
+    const scaled = autoscaleSvg(exported);
+    toast.showInfo('SVG Updated on Close', 500)
+    // Update parent with exported (fixed size) SVG
+    // onChange?.(exported);
+    // Update local preview/cache with autoscaled SVG
+    const id = passage.svg;
+    if (id) svgCache[id] = scaled;
+    setSvg(scaled);
   };
 
   const exportSvg = (svg:string)=>{
@@ -102,6 +153,35 @@ const PassageSceneEditor: React.FC<{
     svgEle.setAttribute("viewBox", "0 0 1920 1080");
     return new XMLSerializer().serializeToString(svgDoc);
   }
+
+
+  // Create debounced save function
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const saveSvg = useCallback(
+    (svg: string) => {
+      // Skip saving until we have captured the initial SVG
+      if (initialSvgRef.current === null) {
+        initialSvgRef.current = svg;
+        return;
+      }
+      // Ignore saving if it matches the initial SVG (first load)
+      if (svg === initialSvgRef.current) return;
+      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+      debounceTimeout.current = setTimeout(() => {
+        const id = passage.svg;
+        if (id) {
+          scenesPersistence.save(id, svg);
+        }
+      }, 500); // Adjust the delay as needed
+    },
+    [passage.svg, scenesPersistence]
+  );
+
+  // Subscribe to svg changes
+  // useEffect(() => {
+  //   saveSvg(svg);
+  // }, [svg, saveSvg]);
+
 
 
   return (

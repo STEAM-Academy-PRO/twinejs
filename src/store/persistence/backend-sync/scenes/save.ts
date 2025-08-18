@@ -6,11 +6,11 @@ export interface UpsertResult {
   size?: number;
 }
 
-export async function upsertFromFile(svg: string, id?: string): Promise<UpsertResult> {
+export async function save(id: string, svg: string): Promise<UpsertResult> {
   const blob = new Blob([svg], { type: 'image/svg+xml' });
   const formData = new FormData();
-  formData.append('file', blob, id ?? '');
-  formData.append('id', id ?? '');
+  formData.append('file', blob, id);
+  formData.append('id', id);
   const res = await fetch(`${BACKEND_SYNC_CONFIG.baseUrl}/scenes/upsert`, {
     method: 'POST',
     body: formData,

@@ -21,7 +21,7 @@ export function useBackendSyncPersistence() {
 			},
 			scenes: {
 				list: scenes.list,
-				upsertFromFile: scenes.upsertFromFile,
+				save: scenes.save,
 				get: scenes.get,
 				remove: scenes.remove,
 			}

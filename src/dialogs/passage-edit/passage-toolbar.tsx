@@ -137,7 +137,6 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 					onClick={handleAddSvg}
 				/>
 			} */}
-			asdf
 			<SceneControls
 				story={story}
 				passage={passage}

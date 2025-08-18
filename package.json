@@ -57,6 +57,7 @@
 		"segseg": "^1.0.0",
 		"semver": "^7.3.4",
 		"svgedit": "^7.3.8",
+		"swr": "^2.3.6",
 		"ua-parser-js": "^0.7.33",
 		"use-error-boundary": "^2.0.6",
 		"uuid": "^11.1.0"
