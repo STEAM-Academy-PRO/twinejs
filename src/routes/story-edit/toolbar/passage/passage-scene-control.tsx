@@ -37,7 +37,7 @@ export const SceneControls: React.FC<AddSceneButtonProps> = props => {
 
 	const handleNewScene = () => {
 		const id = uuid()
-		scenesPersistence?.save(svgTemplate, id)
+		scenesPersistence?.save(id, svgTemplate)
 		dispatch(updatePassage(props.story, props.passage, {svg: id}));
 	};
 
@@ -58,8 +58,8 @@ export const SceneControls: React.FC<AddSceneButtonProps> = props => {
 	};
 
 	const deleteScene = async (id: string) => {
-		await scenesPersistence?.remove(id)
 		dispatch(updatePassage(props.story, props.passage, {svg: ''}));
+		await scenesPersistence?.remove(id)
 	};
 
 
