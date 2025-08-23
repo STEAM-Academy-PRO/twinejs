@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Passage, Story } from '../../store/stories';
 import { useToast } from '../../components/toast';
 import { usePersistence } from '../../store/persistence/use-persistence';
+import Scene from './scene';
+import { autoscaleSvgForPreview } from '../../util/passage-render';
 
 // Module-scoped cache for downloaded/scaled SVGs by ID
 const svgCache: Record<string, string> = {};
@@ -54,9 +56,8 @@ const PassageSceneEditor: React.FC<{
           }
           return;
         }
-        // console.log('getting svg:', id);
         const raw = await scenesPersistence.get(id);
-        const scaled = autoscaleSvg(raw);
+        const scaled = autoscaleSvgForPreview(raw);
         svgCache[id] = scaled;
         if (!cancelled) {
           setSvg(scaled);
@@ -123,8 +124,7 @@ const PassageSceneEditor: React.FC<{
 
   const getSvgFromEditor  = async () => {
     const rawSvg = await call("getSvgString");
-    const exported = exportSvg(rawSvg);
-    const scaled = autoscaleSvg(exported);
+    const scaled = autoscaleSvgForPreview(rawSvg)
     toast.showInfo('SVG Updated on Close', 500)
     // Update parent with exported (fixed size) SVG
     // onChange?.(exported);
@@ -134,25 +134,25 @@ const PassageSceneEditor: React.FC<{
     setSvg(scaled);
   };
 
-  const exportSvg = (svg:string)=>{
-    const svgDoc = new DOMParser().parseFromString(svg, "text/xml");
-    const svgEle = svgDoc.querySelector("svg");
-    if (!svgEle) return svg;
-    svgEle.setAttribute("width", "1920");
-    svgEle.setAttribute("height", "1080");
-    svgEle.setAttribute("viewBox", "0 0 1920 1080");
-    return new XMLSerializer().serializeToString(svgDoc);
-  }
+  // const exportSvg = (svg:string)=>{
+  //   const svgDoc = new DOMParser().parseFromString(svg, "text/xml");
+  //   const svgEle = svgDoc.querySelector("svg");
+  //   if (!svgEle) return svg;
+  //   svgEle.setAttribute("width", "1920");
+  //   svgEle.setAttribute("height", "1080");
+  //   svgEle.setAttribute("viewBox", "0 0 1920 1080");
+  //   return new XMLSerializer().serializeToString(svgDoc);
+  // }
 
-  const autoscaleSvg = (svg: string)=>{
-    const svgDoc = new DOMParser().parseFromString(svg, "text/xml");
-    const svgEle = svgDoc.querySelector("svg");
-    if (!svgEle) return svg;
-    svgEle.removeAttribute("width")
-    svgEle.removeAttribute("height");
-    svgEle.setAttribute("viewBox", "0 0 1920 1080");
-    return new XMLSerializer().serializeToString(svgDoc);
-  }
+  // const autoscaleSvg = (svg: string)=>{
+  //   const svgDoc = new DOMParser().parseFromString(svg, "text/xml");
+  //   const svgEle = svgDoc.querySelector("svg");
+  //   if (!svgEle) return svg;
+  //   svgEle.removeAttribute("width")
+  //   svgEle.removeAttribute("height");
+  //   svgEle.setAttribute("viewBox", "0 0 1920 1080");
+  //   return new XMLSerializer().serializeToString(svgDoc);
+  // }
 
 
   // Create debounced save function
@@ -203,7 +203,9 @@ const PassageSceneEditor: React.FC<{
               <button onClick={() => setIsFullscreen(!isFullscreen)}>
                 {isFullscreen ? 'Exit edit' : 'Edit'}
               </button>
-              <div className="preview-container" dangerouslySetInnerHTML={{__html: svg}} />
+              <div className="preview-container">
+                <Scene passage={passage}/>
+              </div>
           </div>
       )}
     {isFullscreen && (

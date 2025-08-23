@@ -20,7 +20,7 @@
       const canvas = window.svgEditor.svgCanvas;
 
       canvas.bind("changed", async (_win, elems) => {
-        console.log('changed!')
+        // console.log('changed!')
         // send("changed", { ids: elems.map(e => e?.id).filter(Boolean) });
         send("SVG_UPDATED", await canvas.getSvgString());
       });
