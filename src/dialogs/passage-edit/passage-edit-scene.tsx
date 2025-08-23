@@ -3,7 +3,7 @@ import { Passage, Story } from '../../store/stories';
 import { useToast } from '../../components/toast';
 import { usePersistence } from '../../store/persistence/use-persistence';
 import Scene from './scene';
-import { autoscaleSvgForPreview } from '../../util/passage-render';
+import { autoscaleSvgForPreview, cache } from '../../util/passage-render';
 
 // Module-scoped cache for downloaded/scaled SVGs by ID
 const svgCache: Record<string, string> = {};
@@ -102,6 +102,8 @@ const PassageSceneEditor: React.FC<{
       if (e.data.type === "SVG_UPDATED"){
         setSvg(e.data.result);
         saveSvg(e.data.result);
+        console.log(e.data.id)
+        cache[e.data.id] = e.data.result;
         toast.showInfo('SVG Updated', 500)
         return;
       }

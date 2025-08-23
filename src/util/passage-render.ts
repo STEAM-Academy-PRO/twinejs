@@ -12,7 +12,7 @@ type Block = {
 
 const SCENE_ENDPOINT = '/api/scenes';
 
-const cache: Record<string, string> = {};
+export const cache: Record<string, string> = {};
 
 export async function getScene(passage: Passage){
     if (passage.svg && cache[passage.svg]) return cache[passage.svg];
