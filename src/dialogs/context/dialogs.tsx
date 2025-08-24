@@ -4,6 +4,7 @@ import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import {useDialogsContext} from '.';
 import {usePrefsContext} from '../../store/prefs';
 import './dialogs.css';
+import { SceneAssetProvider } from '../passage-edit/scene-asset-context';
 
 // TODO move this to separate module to avoid circular dep
 const DialogTransition: React.FC = props => (
@@ -31,6 +32,7 @@ export const Dialogs: React.FC = () => {
 
 	return (
 		<div className="dialogs" style={containerStyle}>
+			<SceneAssetProvider>
 			<TransitionGroup component={null}>
 				{dialogs.map((dialog, index) => {
 					const managementProps = {
@@ -61,6 +63,7 @@ export const Dialogs: React.FC = () => {
 					);
 				})}
 			</TransitionGroup>
+			</SceneAssetProvider>
 		</div>
 	);
 };

@@ -53,6 +53,13 @@
                 canvas.setZoom(params.zoom);
               return ok(id, true);
             }
+            case "insertSvg": {
+              canvas.addSVGElementsFromJson({
+                element: "image",
+                attr: { x: 10, y: 10, width: 300, height: 600, href: params.url }
+              });
+              return ok(id, true);
+            }
             case "addRect": {
               const r = canvas.addSVGElementsFromJson({
                 element: "rect",

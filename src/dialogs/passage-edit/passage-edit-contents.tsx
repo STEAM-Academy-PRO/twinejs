@@ -19,14 +19,14 @@ export interface PassageEditContentsProps {
 	disabled?: boolean;
 	passageId: string;
 	storyId: string;
-	sceneMode: boolean;
-	setSceneMode: (sceneMode: boolean) => void;
+	sceneEditorMode: boolean;
+	setSceneEditorMode: (sceneMode: boolean) => void;
 }
 
 export const PassageEditContents: React.FC<
 	PassageEditContentsProps
 > = props => {
-	const {disabled, passageId, storyId, sceneMode, setSceneMode} = props;
+	const {disabled, passageId, storyId, sceneEditorMode, setSceneEditorMode} = props;
 	const [storyFormatExtensionsEnabled, setStoryFormatExtensionsEnabled] =
 		React.useState(true);
 	const [editorCrashed, setEditorCrashed] = React.useState(false);
@@ -107,8 +107,8 @@ export const PassageEditContents: React.FC<
 				passage={passage}
 				story={story}
 				useCodeMirror={prefs.useCodeMirror}
-				sceneMode={sceneMode}
-				onSceneModeChange={setSceneMode}
+				sceneMode={sceneEditorMode}
+				onSceneModeChange={setSceneEditorMode}
 			/>
 			{prefs.useCodeMirror && storyFormatExtensionsEnabled && (
 				<StoryFormatToolbar
@@ -119,7 +119,7 @@ export const PassageEditContents: React.FC<
 				/>
 			)}
 			<ErrorBoundary>
-				{!sceneMode &&
+				{!sceneEditorMode &&
 				<PassageText
 					disabled={disabled}
 					onChange={handlePassageTextChange}
@@ -136,6 +136,8 @@ export const PassageEditContents: React.FC<
 						onChange={handlePassageSvgChange}
 						passage={passage}
 						story={story}
+						isFullscreen={sceneEditorMode}
+						setIsFullscreen={setSceneEditorMode}
 					/>
 				)}
 

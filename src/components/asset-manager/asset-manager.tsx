@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { IconSearch, IconUpload } from '@tabler/icons';
 import './asset-manager.css'
 import { useToast } from '../toast/ToastContext';
+import { useSceneAssetBus } from '../../dialogs/passage-edit/scene-asset-context';
 
 interface Asset {
   id: string;
@@ -16,10 +17,9 @@ interface Asset {
 
 interface AssetManagerProps {
   onClose: () => void;
-  onAssetSelect?: (url: string) => void;
 }
 
-export const AssetManager: React.FC<AssetManagerProps> = ({ onClose, onAssetSelect }) => {
+export const AssetManager: React.FC<AssetManagerProps> = ({ onClose }) => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -27,6 +27,11 @@ export const AssetManager: React.FC<AssetManagerProps> = ({ onClose, onAssetSele
   // const [isCollapsed, setIsCollapsed] = useState(false);
   const [isUploadCollapsed, setIsUploadCollapsed] = useState(false);
   const toast = useToast();
+  const assetBus = useSceneAssetBus();
+
+	const onAssetSelect = (url: string) => {
+    assetBus.sendUrl(url)
+	}
 
   const handleDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -259,7 +264,6 @@ const listAssets = async (): Promise<Asset[]> => {
       size: asset.size,
       uploadedAt: new Date(),
     }))
-    console.warn(assets)
     return assets;
   } catch (error) {
     console.error('Error listing assets:', error);

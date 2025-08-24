@@ -4,6 +4,7 @@ import { useToast } from '../../components/toast';
 import { usePersistence } from '../../store/persistence/use-persistence';
 import Scene from './scene';
 import { autoscaleSvgForPreview, cache } from '../../util/passage-render';
+import { useSceneAssetBus } from './scene-asset-context';
 
 // Module-scoped cache for downloaded/scaled SVGs by ID
 const svgCache: Record<string, string> = {};
@@ -24,20 +25,23 @@ interface SvgeResponse {
 }
 
 const PassageSceneEditor: React.FC<{
-  disabled?: boolean;
   passage: Passage;
   story: Story;
+  isFullscreen: boolean;
+  setIsFullscreen: (isFullscreen: boolean) => void;
 }> = ({
   passage,
+  isFullscreen,
+  setIsFullscreen
 }) => {
 
-  const [isFullscreen, setIsFullscreen] = React.useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(false);
   const pending = useRef(new Map<string, (r:SvgeResponse)=>void>());
   const toast = useToast();
   const {scenes: scenesPersistence} = usePersistence();
   const [svg, setSvg] = useState<string>('');
+  const assetBus = useSceneAssetBus();
   // Track the initially loaded SVG to avoid saving it back immediately
   const initialSvgRef = useRef<string | null>(null);
   if (!scenesPersistence){
@@ -102,7 +106,7 @@ const PassageSceneEditor: React.FC<{
       if (e.data.type === "SVG_UPDATED"){
         setSvg(e.data.result);
         saveSvg(e.data.result);
-        console.log(e.data.id)
+        // console.log(e.data.id)
         cache[e.data.id] = e.data.result;
         toast.showInfo('SVG Updated', 500)
         return;
@@ -122,6 +126,20 @@ const PassageSceneEditor: React.FC<{
 
     return () => window.removeEventListener("message", onMessage);
   }, [loadSvg]);
+
+
+  // Subscribe to URLs coming from the Asset Manager via the per-dialog bus
+  useEffect(() => {
+    const unsubscribe = assetBus.onUrl(async (url: string) => {
+      // For now, we only notify and pass through to the iframe bridge if needed later
+      toast.showInfo('Received asset URL', 1000);
+      // console.log('[SceneEditor] Received URL from asset manager:', url);
+      await call("insertSvg", {url});
+      // If your SVG editor supports importing by URL via postMessage bridge,
+      // call it here, e.g.: await call('importUrl', { url });
+    });
+    return unsubscribe;
+  }, [assetBus, toast]);
 
 
   const getSvgFromEditor  = async () => {
