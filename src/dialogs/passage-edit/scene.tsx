@@ -9,7 +9,8 @@ export default function Scene({passage}: {passage: Passage}){
     const svgRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        renderScene(passage).then((svg)=>{
+        console.log('rerendering scene', passage.svg)
+        renderScene(passage, true).then((svg)=>{
             setSvg(svg)
     })
     }, [passage]);

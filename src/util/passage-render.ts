@@ -14,22 +14,22 @@ const SCENE_ENDPOINT = '/api/scenes';
 
 export const cache: Record<string, string> = {};
 
-export async function getScene(passage: Passage){
-    if (passage.svg && cache[passage.svg]) return cache[passage.svg];
+export async function getScene(passage: Passage, force = false){
+    if (passage.svg && cache[passage.svg] && !force) return cache[passage.svg];
     if (!passage.svg) return '';
     const svg = await fetch(`${SCENE_ENDPOINT}/${passage.svg}`).then(res => res.text());
     cache[passage.svg] = svg;
     return svg;
 }
 
-export async function renderScene(passage: Passage): Promise<string> {
+export async function renderScene(passage: Passage, force = false): Promise<string> {
   // We take the SVG, parse the text, and come up with a populated SVG.
 
   if (!passage.svg) {
     return '';
   }
 
-  const svg = await getScene(passage);
+  const svg = await getScene(passage, force);
   if (!svg){
     console.error('no SVG was returned.')
     return '';
