@@ -179,10 +179,10 @@ function appendMultilineText(parent: SVGElement, text: string, bbox: SVGRect, op
     const yStart = bbox.y + (bbox.height - totalHeight) / 2 + PADDING_TOP;
     let y = yStart;
     for (const ln of wrappedLines) {
-      const tspan = document.createElementNS(NS, 'tspan');
+      const tspan = tspanWithWikiLinks(ln);
       tspan.setAttribute('x', String(bbox.x + PADDING));
       tspan.setAttribute('y', String(y));
-      tspan.textContent = ln;
+      // tspan.textContent = ln;
       parent.appendChild(tspan);
       y += lineHeight;
     }
@@ -196,6 +196,49 @@ function appendMultilineText(parent: SVGElement, text: string, bbox: SVGRect, op
   fallback.setAttribute('y', String(bbox.y + PADDING));
   fallback.textContent = text.replace(/\s+/g, ' ').trim();
   parent.appendChild(fallback);
+}
+
+
+function tspanWithWikiLinks(text: string, svgNS = 'http://www.w3.org/2000/svg') {
+  const tspan = document.createElementNS(svgNS, 'tspan');
+
+  const regex = /\[\[([^\]]+)\]\]/g;
+
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    const passage = match[1];
+
+    // Add plain text before this link
+    if (match.index > lastIndex) {
+      const plainText = text.slice(lastIndex, match.index);
+      tspan.appendChild(document.createTextNode(plainText));
+    }
+
+    // Find the link in the already existing
+    const aDom = document.querySelector(`[data-passage='${passage}']`)
+    console.log(aDom)
+
+    // Create <a> element (must be in SVG namespace)
+    const a = document.createElementNS(svgNS, 'a');
+    a.setAttribute('data-passage', passage);
+    a.setAttribute('class', 'link-internal');
+    a.setAttribute('role', 'link');
+    a.setAttribute('tabindex', '0');
+    a.textContent = passage;
+    a.onclick = ()=>{
+    	$(aDom).trigger('click')
+    }
+    tspan.appendChild(a);
+
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length){
+    tspan.textContent = text.slice(lastIndex);
+  }
+
+  return tspan;
 }
 
 function svgIdMap(root: ParentNode) {
