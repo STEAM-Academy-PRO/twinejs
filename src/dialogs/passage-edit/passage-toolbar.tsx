@@ -18,8 +18,6 @@ import {
 import {useUndoableStoriesContext} from '../../store/undoable-stories';
 import {Color} from '../../util/color';
 import {TagCardButton} from '../../components/tag/tag-card-button';
-import { AddSvgButton } from '../../routes/story-edit/toolbar/passage/passage-add-svg';
-import svgTemplate from '../../util/svg-template.svg?raw';
 import { SceneControls } from '../../routes/story-edit/toolbar/passage/passage-scene-control';
 
 export interface PassageToolbarProps {
@@ -56,10 +54,6 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 		// has been updated since that hasn't happened yet.
 
 		dispatch(updatePassage(story, passage, {name}, {dontUpdateOthers: true}));
-	}
-
-	async function handleAddSvg() {
-		dispatch(updatePassage(story, passage, {svg: svgTemplate}));
 	}
 
 	function handleSetSize({height, width}: {height: number; width: number}) {
@@ -132,11 +126,6 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 				{sceneMode ? <IconCode /> : <IconLayoutGrid />}
 			</button>
 			)}
-			{/* {!passage.svg &&
-				<AddSvgButton
-					onClick={handleAddSvg}
-				/>
-			} */}
 			<SceneControls
 				story={story}
 				passage={passage}
