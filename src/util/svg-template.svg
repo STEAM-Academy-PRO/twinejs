@@ -1,14 +1,15 @@
-<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+<svg width="1919.9999999999998" height="1080" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
  <g class="layer" display="inline">
   <title>background</title>
-  <image height="1080" href="/api/assets/e7ddeeabc4466392c09d65f19429aeec---lab-plants.jpeg" id="bg" transform="matrix(1.06808 0 0 1.06808 0 0)" width="1920" x="-55.48" y="-34.68"/>
+  <image height="1080" href="/api/assets/e7ddeeabc4466392c09d65f19429aeec---lab-plants.jpeg" id="svg_5" transform="matrix(1.06808 0 0 1.06808 0 0)" width="1920" x="-55.48" y="-34.68"/>
  </g>
  <g class="layer">
   <title>characters</title>
-  <image height="722.19" href="/api/assets/42a81ab5dbdcc0fa7e11b97076e5b552---Captain_-_Showing.png" id="frio" width="489.49" x="202.18" y="408.62"/>
+  <image height="722.19" href="/api/assets/42a81ab5dbdcc0fa7e11b97076e5b552---Captain_-_Showing.png" id="svg_4" width="489.49" x="237.89" y="358.62"/>
  </g>
  <g class="layer">
   <title>bubbles</title>
-  <path class="bubble" d="m501.85,495.94c1.9,-6.15 24.31,-62.72 25.77,-65.02l18.35,2.96l7.23,-49.9l19.89,21.11l-5.42,-142.02l524.41,-30.71l-14.47,195.76l-475.58,-3.84l-13.21,25.39l-13.91,-19.63l-39.09,33.81l-33.97,32.09z" fill="#ffffff" id="bubble_frio" stroke="#09f4d1" stroke-width="6"/>
+  <path class="bubble" d="m530.56,487.94c1.9,-6.15 24.31,-62.72 25.77,-65.02l18.35,2.96l7.23,-49.9l19.89,21.11l-5.42,-142.02l524.41,-30.71l-14.47,195.76l-475.58,-3.84l-13.21,25.39l-13.91,-19.63l-39.09,33.81l-33.97,32.09z" fill="#ffffff" id="bubble_wrap" stroke="#09f4d1" stroke-width="6" transform="matrix(1 0 0 1 0 0)"/>
+  <rect fill="#ffffff" height="141.82" id="bubble_frio" stroke="#09f4d1" stroke-width="0" transform="matrix(0.99986 -0.0167572 0.0167572 0.99986 -5.45157 14.3277)" width="485" x="609.73" y="261.56"/>
  </g>
 </svg>
