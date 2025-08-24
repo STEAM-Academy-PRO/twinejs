@@ -69,11 +69,24 @@ export const AssetManager: React.FC<AssetManagerProps> = ({ onClose }) => {
 
     toast.showInfo(`Copied to clipboard: ${asset.url}`, 2000)
 
+
+
     if (onAssetSelect){
       onAssetSelect(asset.url)
     }
     // onClose();
   }, [onAssetSelect, onClose]);
+
+  const handleAssetContextMenu = useCallback((e: React.MouseEvent, asset: Asset) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(asset.url).then(() => {
+      console.log('Copied the text to clipboard (context menu)');
+    }).catch(err => {
+      console.error('Error copying text: ', err);
+    });
+    toast.showInfo(`Copied to clipboard: ${asset.url}`, 2000)
+    // Intentionally DO NOT call onAssetSelect on right-click
+  }, []);
 
   const filteredAssets = assets.filter(asset =>
     asset.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -138,6 +151,7 @@ export const AssetManager: React.FC<AssetManagerProps> = ({ onClose }) => {
               key={asset.id}
               className="asset-item"
               onClick={() => handleAssetClick(asset)}
+              onContextMenu={(e) => handleAssetContextMenu(e, asset)}
             >
               <div className="asset-preview">
                 {['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(asset.type) && (
